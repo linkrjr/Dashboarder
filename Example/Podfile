@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Dashboarder_Example' do
+  pod 'Dashboarder', :path => '../'
+
+  target 'Dashboarder_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
