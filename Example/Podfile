@@ -2,6 +2,7 @@ use_frameworks!
 
 target 'Dashboarder_Example' do
   pod 'Dashboarder', :path => '../'
+  pod 'SnapKit'
 
   target 'Dashboarder_Tests' do
     inherit! :search_paths
