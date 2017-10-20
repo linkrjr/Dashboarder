@@ -39,7 +39,8 @@ open class DashboardController: UIViewController {
     
     private var widgetsStatus: [UIViewController : DashboardWidgetStatus] = [:]
     
-    @objc open dynamic var enablePullToRefresh: Bool = true
+    public var enablePullToRefresh: Bool = true
+    public var lastRowTakesRemainingHeight: Bool = false
     
     var scrollView: UIScrollView = UIScrollView(frame: CGRect.zero)
     
@@ -113,17 +114,27 @@ open class DashboardController: UIViewController {
     
     private func calculateWidgetsFrame() {
         var y: CGFloat = 0
-        self.viewControllers.forEach { widget in
-            widget.view.frame = CGRect(x: self.scrollView.bounds.minX, y: y, width: self.scrollView.bounds.maxX, height: widget.height())
-            y += widget.height()
+        
+        for (index, widget) in self.viewControllers.enumerated() {
+            var height = widget.height()
+            
+            if self.lastRowTakesRemainingHeight
+                && (index + 1) == self.viewControllers.count
+                && height < (self.scrollView.contentSize.height - y) {
+                height = self.scrollView.contentSize.height - y
+            }
+            
+            widget.view.frame = CGRect(x: self.scrollView.bounds.minX, y: y, width: self.scrollView.bounds.maxX, height: height)
+            y += height
         }
+        
     }
-    
+
     private func calculateContentSize() -> CGSize {
         let height: CGFloat = self.viewControllers.reduce(0) { (sum, widget) -> CGFloat in
             return sum + widget.height()
         }
         return CGSize(width: self.view.bounds.width, height: height)
     }
-    
+
 }
