@@ -24,38 +24,9 @@ class ViewController: DashboardController, UIScrollViewDelegate {
         self.backgroundView.backgroundColor = .red
         self.scrollView.addSubview(self.backgroundView)
         
-//        self.scrollView.backgroundColor = .yellow
-//        self.lastRowTakesRemainingHeight = true
-        
         self.widgets.forEach { self.viewControllers.append($0) }
         
-//        self.bottomView.frame = self.scrollView.frame.offsetBy(dx: 0, dy: self.scrollView.frame.height)
-//        self.bottomView.backgroundColor = .lightGray
-//        self.backgroundView.addSubview(self.bottomView)
-
-//        let gradient = CAGradientLayer()
-//        gradient.frame = self.scrollView.bounds
-//        gradient.colors = [UIColor.white.cgColor, UIColor.yellow.cgColor]
-//        self.scrollView.layer.insertSublayer(gradient, at: 0)
-        
         super.viewDidLoad()
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        var frame = bottomView.frame
-//        frame.origin.y = self.scrollView.contentSize.height - self.scrollView.contentOffset.y
-//        bottomView.frame = frame
-    }
-    
-    func calculateGradientFrame() -> CGRect {
-        let gradientWidgets = self.widgets.dropLast()
-        let height: CGFloat = gradientWidgets.reduce(0) { (sum, widget) -> CGFloat in
-            return sum + widget.height()
-        }
-        return CGRect(x: self.view.bounds.minX,
-                      y: self.view.bounds.minY,
-                      width: self.view.bounds.width,
-                      height: height)
     }
     
 }
@@ -85,9 +56,6 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.view.layer.borderColor = UIColor.black.cgColor
-//        self.view.layer.borderWidth = 1
-        
         let button = UIButton(type: UIButtonType.system)
         button.setTitle("Ok", for: .normal)
         button.addTarget(self, action: #selector(Widget.didTapButton), for: .touchUpInside)
@@ -116,7 +84,6 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
     
     func didFinishUpdating() {
         self.defaultHeight = self.defaultHeight * CGFloat(arc4random_uniform(UInt32(self.dashboardController!.viewControllers.count)) + 1)
-//        (self.dashboardController as! ViewController).calculateGradientFrame()
         self.dashboardController?.reload(self)
     }
     
