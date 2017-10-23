@@ -12,7 +12,7 @@ import SnapKit
 
 class ViewController: DashboardController, UIScrollViewDelegate {
     
-    let widgets: [DashboardWidgetViewController] = [Widget(color: .red, height: 50), Widget(color: .blue,height: 50), AppCardsWidget(color: .yellow, height: 50)]
+    let widgets: [DashboardWidget] = [Widget(color: .red, height: 50), Widget(color: .blue,height: 50), AppCardsWidget(color: .yellow, height: 50)]
     
     let backgroundView = UIView(frame: CGRect.zero)
     let bottomView = UIView(frame: CGRect.zero)

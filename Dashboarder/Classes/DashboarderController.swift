@@ -9,8 +9,6 @@
 
 import UIKit
 
-public typealias DashboardWidgetViewController = UIViewController & DashboardWidget
-
 extension Array where Element == Bool {
     
     func all(are expected: Bool) -> Bool {
@@ -44,10 +42,11 @@ open class DashboardController: UIViewController {
     
     public var scrollView: UIScrollView = UIScrollView(frame: CGRect.zero)
     
-    public var viewControllers: [DashboardWidgetViewController] = [] {
+    public var viewControllers: [DashboardWidget] = [] {
         didSet {
-            self.widgetsStatus[viewControllers.last!] = .ready
-            dump(self.widgetsStatus)
+            if let vc = viewControllers.last as? UIViewController {
+                self.widgetsStatus[vc] = .ready
+            }
         }
     }
     
@@ -57,7 +56,6 @@ open class DashboardController: UIViewController {
         super.viewDidLoad()
         
         self.scrollView.frame = self.view.bounds
-//        self.scrollView.backgroundColor = .clear
         self.scrollView.alwaysBounceVertical = true
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.showsVerticalScrollIndicator = false
@@ -73,22 +71,28 @@ open class DashboardController: UIViewController {
         self.scrollView.contentSize = self.calculateContentSize()
         
         self.viewControllers.forEach { widget in
-            self.addChildViewController(widget)
-            self.scrollView.addSubview(widget.view)
-            widget.didMove(toParentViewController: self)
+            if let vc = widget as? UIViewController {
+                self.addChildViewController(vc)
+                self.scrollView.addSubview(vc.view)
+                vc.didMove(toParentViewController: self)
+            }
         }
         
     }
     
     @objc func pullToRefresh(sender: UIRefreshControl) {
         self.viewControllers.forEach { widget in
-            self.widgetsStatus[widget] = .updating
-            widget.update()
+            if let vc = widget as? UIViewController {
+                self.widgetsStatus[vc] = .updating
+                widget.update()
+            }
         }
     }
     
-    public func reload(_ widget: DashboardWidgetViewController) {
-        self.widgetsStatus[widget] = .ready
+    public func reload(_ widget: DashboardWidget) {
+        if let vc = widget as? UIViewController {
+            self.widgetsStatus[vc] = .ready
+        }
         
         if !self.widgetsStatus.values.makeIterator().contains(.updating) {
             
@@ -117,7 +121,9 @@ open class DashboardController: UIViewController {
                 height = self.scrollView.bounds.height - y
             }
             
-            widget.view.frame = CGRect(x: self.view.bounds.minX, y: y, width: self.view.bounds.maxX, height: height)
+            if let vc = widget as? UIViewController {
+                vc.view.frame = CGRect(x: self.view.bounds.minX, y: y, width: self.view.bounds.maxX, height: height)
+            }
             y += height
         }
         
