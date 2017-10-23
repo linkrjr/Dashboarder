@@ -16,6 +16,8 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		7749CE0D1F97790A008470E9 /* Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7749CE0C1F97790A008470E9 /* Adapter.swift */; };
 		7749CE0F1F97792A008470E9 /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7749CE0E1F97792A008470E9 /* NextViewController.swift */; };
+		7749CE131F97B302008470E9 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7749CE121F97B302008470E9 /* Service.swift */; };
+		7749CE161F97B355008470E9 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7749CE151F97B355008470E9 /* Card.swift */; };
 		91799F413200B3A3ED416A31 /* Pods_Dashboarder_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C673962F3FD7C30DBBD0A96 /* Pods_Dashboarder_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +49,8 @@
 		747C4A11ED49413F49B75665 /* Pods-Dashboarder_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dashboarder_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dashboarder_Example/Pods-Dashboarder_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		7749CE0C1F97790A008470E9 /* Adapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adapter.swift; sourceTree = "<group>"; };
 		7749CE0E1F97792A008470E9 /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
+		7749CE121F97B302008470E9 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		7749CE151F97B355008470E9 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		7AE21D5B40DDA1CDDA93B729 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		83DEDF00CBD6CF7BF7B704A3 /* Pods-Dashboarder_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dashboarder_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Dashboarder_Tests/Pods-Dashboarder_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		D561BBE957643BDE4726473F /* Pods-Dashboarder_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dashboarder_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Dashboarder_Tests/Pods-Dashboarder_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -106,6 +110,7 @@
 		607FACD21AFB9204008FA782 /* Example for Dashboarder */ = {
 			isa = PBXGroup;
 			children = (
+				7749CE141F97B342008470E9 /* models */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -114,6 +119,7 @@
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				7749CE0C1F97790A008470E9 /* Adapter.swift */,
 				7749CE0E1F97792A008470E9 /* NextViewController.swift */,
+				7749CE121F97B302008470E9 /* Service.swift */,
 			);
 			name = "Example for Dashboarder";
 			path = Dashboarder;
@@ -152,6 +158,14 @@
 				7AE21D5B40DDA1CDDA93B729 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		7749CE141F97B342008470E9 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				7749CE151F97B355008470E9 /* Card.swift */,
+			);
+			name = models;
 			sourceTree = "<group>";
 		};
 		AC0F0F27E845BC2ED5E0E3F2 /* Pods */ = {
@@ -379,7 +393,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				7749CE161F97B355008470E9 /* Card.swift in Sources */,
 				7749CE0F1F97792A008470E9 /* NextViewController.swift in Sources */,
+				7749CE131F97B302008470E9 /* Service.swift in Sources */,
 				7749CE0D1F97790A008470E9 /* Adapter.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);

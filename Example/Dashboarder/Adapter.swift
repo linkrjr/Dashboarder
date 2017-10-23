@@ -26,7 +26,8 @@ class Adapter {
         let group = DispatchGroup()
         
         group.enter()
-        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + Double(arc4random_uniform(UInt32(10)) + 1)) {
+//         + Double(arc4random_uniform(UInt32(10)) + 1)
+        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()) {
             group.leave()
         }
         

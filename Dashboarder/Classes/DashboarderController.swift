@@ -42,7 +42,7 @@ open class DashboardController: UIViewController {
     public var enablePullToRefresh: Bool = true
     public var lastRowTakesRemainingHeight: Bool = false
     
-    var scrollView: UIScrollView = UIScrollView(frame: CGRect.zero)
+    public var scrollView: UIScrollView = UIScrollView(frame: CGRect.zero)
     
     public var viewControllers: [DashboardWidgetViewController] = [] {
         didSet {
@@ -57,10 +57,11 @@ open class DashboardController: UIViewController {
         super.viewDidLoad()
         
         self.scrollView.frame = self.view.bounds
+//        self.scrollView.backgroundColor = .clear
+        self.scrollView.alwaysBounceVertical = true
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.showsVerticalScrollIndicator = false
         self.view.addSubview(self.scrollView)
-        self.resizeContentSize()
         
         if self.enablePullToRefresh {
             self.refreshControl.addTarget(self, action: #selector(DashboardController.pullToRefresh(sender:)), for: .valueChanged)
@@ -68,7 +69,8 @@ open class DashboardController: UIViewController {
             self.scrollView.addSubview(self.refreshControl)
         }
         
-        self.self.calculateWidgetsFrame()
+        self.calculateWidgetsFrame()
+        self.scrollView.contentSize = self.calculateContentSize()
         
         self.viewControllers.forEach { widget in
             self.addChildViewController(widget)
@@ -95,20 +97,11 @@ open class DashboardController: UIViewController {
             }
             
             self.calculateWidgetsFrame()
-            self.resizeContentSize()
+            self.scrollView.contentSize = self.calculateContentSize()
             
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
             
-        }
-    }
-    
-    private func resizeContentSize() {
-        let size = calculateContentSize()
-        if self.view.bounds.contains(CGRect(origin: CGPoint(x: 0, y: 0) , size: size)) {
-            self.scrollView.contentSize = self.view.bounds.size
-        } else {
-            self.scrollView.contentSize = size
         }
     }
     
@@ -120,11 +113,11 @@ open class DashboardController: UIViewController {
             
             if self.lastRowTakesRemainingHeight
                 && (index + 1) == self.viewControllers.count
-                && height < (self.scrollView.contentSize.height - y) {
-                height = self.scrollView.contentSize.height - y
+                && height < (self.scrollView.bounds.height - y) {
+                height = self.scrollView.bounds.height - y
             }
             
-            widget.view.frame = CGRect(x: self.scrollView.bounds.minX, y: y, width: self.scrollView.bounds.maxX, height: height)
+            widget.view.frame = CGRect(x: self.view.bounds.minX, y: y, width: self.view.bounds.maxX, height: height)
             y += height
         }
         
@@ -134,7 +127,12 @@ open class DashboardController: UIViewController {
         let height: CGFloat = self.viewControllers.reduce(0) { (sum, widget) -> CGFloat in
             return sum + widget.height()
         }
-        return CGSize(width: self.view.bounds.width, height: height)
+        
+        let size = CGSize(width: self.view.bounds.width, height: height)
+//        if self.view.bounds.contains(CGRect(origin: CGPoint(x: 0, y: 0) , size: size)) {
+//            return self.view.bounds.size
+//        }
+        return size
     }
 
 }
