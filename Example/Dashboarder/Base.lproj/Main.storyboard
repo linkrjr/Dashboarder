@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,7 +23,20 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <navigationItem key="navigationItem" id="DNe-uZ-f7o"/>
+                    <navigationItem key="navigationItem" id="DNe-uZ-f7o">
+                        <rightBarButtonItems>
+                            <barButtonItem style="plain" systemItem="refresh" id="jDi-9o-8fq">
+                                <connections>
+                                    <action selector="didTapRefreshButton:" destination="vXZ-lx-hvc" id="Na2-Xn-0wu"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Show" id="h7z-f0-agX">
+                                <connections>
+                                    <action selector="didTapShowButton:" destination="vXZ-lx-hvc" id="xNa-9B-8AK"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

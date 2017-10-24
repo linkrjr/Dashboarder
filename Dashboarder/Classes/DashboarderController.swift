@@ -35,20 +35,14 @@ extension Array {
 
 open class DashboardController: UIViewController {
     
-    private var widgetsStatus: [UIViewController : DashboardWidgetStatus] = [:]
+    fileprivate var includedWidgets: [UIViewController : DashboardWidgetStatus] = [:]
     
     public var enablePullToRefresh: Bool = true
     public var lastRowTakesRemainingHeight: Bool = false
     
     public var scrollView: UIScrollView = UIScrollView(frame: CGRect.zero)
     
-    public var viewControllers: [DashboardWidget] = [] {
-        didSet {
-            if let vc = viewControllers.last as? UIViewController {
-                self.widgetsStatus[vc] = .ready
-            }
-        }
-    }
+    public var widgets: [DashboardWidget] = []
     
     var refreshControl:UIRefreshControl = UIRefreshControl()
     
@@ -67,23 +61,16 @@ open class DashboardController: UIViewController {
             self.scrollView.addSubview(self.refreshControl)
         }
         
+        self.addWidgetsToContainer()
         self.calculateWidgetsFrame()
         self.scrollView.contentSize = self.calculateContentSize()
-        
-        self.viewControllers.forEach { widget in
-            if let vc = widget as? UIViewController {
-                self.addChildViewController(vc)
-                self.scrollView.addSubview(vc.view)
-                vc.didMove(toParentViewController: self)
-            }
-        }
-        
+    
     }
     
     @objc func pullToRefresh(sender: UIRefreshControl) {
-        self.viewControllers.forEach { widget in
+        self.widgets.forEach { widget in
             if let vc = widget as? UIViewController {
-                self.widgetsStatus[vc] = .updating
+                self.includedWidgets[vc] = .updating
                 widget.update()
             }
         }
@@ -91,15 +78,15 @@ open class DashboardController: UIViewController {
     
     public func reload(_ widget: DashboardWidget) {
         if let vc = widget as? UIViewController {
-            self.widgetsStatus[vc] = .ready
+            self.includedWidgets[vc] = .ready
         }
         
-        if !self.widgetsStatus.values.makeIterator().contains(.updating) {
+        if !self.includedWidgets.values.makeIterator().contains(.updating) {
             
             if self.enablePullToRefresh && self.refreshControl.isRefreshing {
                 self.refreshControl.endRefreshing()
             }
-            
+
             self.calculateWidgetsFrame()
             self.scrollView.contentSize = self.calculateContentSize()
             
@@ -109,36 +96,30 @@ open class DashboardController: UIViewController {
         }
     }
     
-    private func calculateWidgetsFrame() {
+    fileprivate func addWidgetsToContainer() {
+        self.widgets.forEach { widget in
+            guard let vc = widget as? UIViewController else { return }
+            self.includedWidgets[vc] = .ready
+            self.addChildViewController(vc)
+            self.scrollView.addSubview(vc.view)
+            vc.didMove(toParentViewController: self)
+        }
+    }
+    
+    fileprivate func calculateWidgetsFrame() {
         var y: CGFloat = 0
         
-        for (index, widget) in self.viewControllers.enumerated() {
-            var height = widget.height()
-            
-            if self.lastRowTakesRemainingHeight
-                && (index + 1) == self.viewControllers.count
-                && height < (self.scrollView.bounds.height - y) {
-                height = self.scrollView.bounds.height - y
-            }
-            
-            if let vc = widget as? UIViewController {
-                vc.view.frame = CGRect(x: self.view.bounds.minX, y: y, width: self.view.bounds.maxX, height: height)
-            }
-            y += height
+        self.widgets.forEach { widget in
+            guard let vc = widget as? UIViewController else { return }
+            vc.view.isHidden = widget.height() == 0
+            vc.view.frame = CGRect(x: self.view.bounds.minX, y: y, width: self.view.bounds.maxX, height: widget.height())
+            y += widget.height()
         }
-        
     }
 
-    private func calculateContentSize() -> CGSize {
-        let height: CGFloat = self.viewControllers.reduce(0) { (sum, widget) -> CGFloat in
-            return sum + widget.height()
-        }
-        
-        let size = CGSize(width: self.view.bounds.width, height: height)
-//        if self.view.bounds.contains(CGRect(origin: CGPoint(x: 0, y: 0) , size: size)) {
-//            return self.view.bounds.size
-//        }
-        return size
+    fileprivate func calculateContentSize() -> CGSize {
+        let height: CGFloat = self.widgets.reduce(0) { $0 + $1.height() }
+        return CGSize(width: self.view.bounds.width, height: height)
     }
 
 }

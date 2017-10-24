@@ -13,6 +13,7 @@ enum DashboardWidgetStatus {
 }
 
 public protocol DashboardWidget {
+    // Return ZERO if widget is to be hidden
     func height() -> CGFloat
     func update()
 }
