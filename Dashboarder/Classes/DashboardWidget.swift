@@ -7,11 +7,6 @@
 
 import Foundation
 
-enum DashboardWidgetStatus {
-    case ready
-    case updating
-}
-
 public protocol DashboardWidget {
     // Return ZERO if widget is to be hidden
     func height() -> CGFloat
