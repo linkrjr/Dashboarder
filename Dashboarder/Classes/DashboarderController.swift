@@ -44,7 +44,7 @@ open class DashboardController: UIViewController {
     
     public var widgets: [DashboardWidget] = []
     
-    var refreshControl:UIRefreshControl = UIRefreshControl()
+    public var refreshControl:UIRefreshControl = UIRefreshControl()
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +67,7 @@ open class DashboardController: UIViewController {
     
     }
     
-    @objc func pullToRefresh(sender: UIRefreshControl) {
+    @objc open func pullToRefresh(sender: UIRefreshControl) {
         self.widgets.forEach { widget in
             if let vc = widget as? UIViewController {
                 self.includedWidgets[vc] = .updating
