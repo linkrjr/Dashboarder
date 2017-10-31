@@ -45,7 +45,7 @@ open class DashboardController: UIViewController {
     
     }
     
-    @objc func pullToRefresh(sender: UIRefreshControl) {
+    @objc open func pullToRefresh(sender: UIRefreshControl) {
         self.widgets.forEach { widget in
             dispatchGroup.enter()
             widget.update()
