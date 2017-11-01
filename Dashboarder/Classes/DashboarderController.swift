@@ -56,8 +56,7 @@ open class DashboardController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        self.scrollView.frame = self.view.bounds
-//        self.scrollView.backgroundColor = .clear
+        self.scrollView.frame = self.calculateScrollViewFrame()
         self.scrollView.alwaysBounceVertical = true
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.showsVerticalScrollIndicator = false
@@ -128,11 +127,18 @@ open class DashboardController: UIViewController {
             return sum + widget.height()
         }
         
-        let size = CGSize(width: self.view.bounds.width, height: height)
-//        if self.view.bounds.contains(CGRect(origin: CGPoint(x: 0, y: 0) , size: size)) {
-//            return self.view.bounds.size
-//        }
-        return size
+        return CGSize(width: self.view.bounds.width, height: height)
+    }
+    
+    fileprivate func calculateScrollViewFrame() -> CGRect {
+        var height = self.view.bounds.height - UIApplication.shared.statusBarFrame.height
+        if let navigationController = self.navigationController {
+            height -= navigationController.navigationBar.frame.height
+        }
+        if let tabBarController = self.tabBarController {
+            height -= tabBarController.tabBar.frame.height
+        }
+        return CGRect(origin: self.view.bounds.origin, size: CGSize(width: self.view.bounds.width, height: height))
     }
 
 }
