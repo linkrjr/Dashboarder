@@ -13,9 +13,8 @@ enum DashboardWidgetStatus {
 }
 
 public protocol DashboardWidget {
-    // Return ZERO if widget is to be hidden
-    func height() -> CGFloat
     func update()
+    func recreateConstraints()
 }
 
 public extension DashboardWidget where Self: UIViewController {

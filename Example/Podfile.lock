@@ -1,5 +1,6 @@
 PODS:
-  - Dashboarder (0.1.0)
+  - Dashboarder (0.2.0):
+    - SnapKit (~> 4.0)
   - SnapKit (4.0.0)
 
 DEPENDENCIES:
@@ -11,7 +12,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Dashboarder: 276015c081c3c1cef381a79ed27e0446d48626b0
+  Dashboarder: 4b10d89af0b4bc5bf71b7ff8a4bee8dca678e7be
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
 PODFILE CHECKSUM: 2119b87e431e1a021050165a9048d556b6007bc1

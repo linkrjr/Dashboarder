@@ -12,7 +12,10 @@ import SnapKit
 
 class ViewController: DashboardController, UIScrollViewDelegate {
     
-    var widgetss: [DashboardWidget] = [Widget(color: .red, height: 50, display: false), Widget(color: .orange, height: 50, display: false), Widget(color: .blue,height: 50), AppCardsWidget(color: .yellow, height: 50)]
+    var widgetss: [DashboardWidget] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: false),
+                                       Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
+                                       Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20),
+                                       AppCardsWidget(color: .yellow, height: CGFloat(arc4random_uniform(50))*20)]
     
     let backgroundView = UIView(frame: CGRect.zero)
     let bottomView = UIView(frame: CGRect.zero)
@@ -20,9 +23,9 @@ class ViewController: DashboardController, UIScrollViewDelegate {
     override func viewDidLoad() {
         self.scrollView.delegate = self
         
-        self.backgroundView.frame = CGRect(origin: self.scrollView.frame.origin, size: self.scrollView.contentSize)
-        self.backgroundView.backgroundColor = .red
-        self.scrollView.addSubview(self.backgroundView)
+//        self.backgroundView.frame = CGRect(origin: self.scrollView.frame.origin, size: self.scrollView.contentSize)
+//        self.backgroundView.backgroundColor = .red
+//        self.scrollView.addSubview(self.backgroundView)
         
         self.widgetss.forEach { self.widgets.append($0) }
         
@@ -79,6 +82,10 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
             make.centerX.centerY.equalToSuperview()
         }
         
+        self.view.snp.makeConstraints({ make in
+            make.height.equalTo(self.defaultHeight)
+        })
+        
         self.view.backgroundColor = self.color
     }
     
@@ -87,19 +94,18 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func height() -> CGFloat {
-        if self.display {
-            return self.defaultHeight
-        }
-        return 0
-    }
-    
     func update() {
         self.adapter.update(self)
     }
     
+    func recreateConstraints() {
+        self.view.snp.remakeConstraints({ make in
+            make.height.equalTo(self.defaultHeight)
+        })
+    }
+    
     func didFinishUpdating() {
-        self.defaultHeight = self.defaultHeight * CGFloat(arc4random_uniform(UInt32(self.dashboardController!.widgets.count)) + 1)
+        self.defaultHeight = CGFloat(arc4random_uniform(50))*20
         self.dashboardController?.reload(self)
     }
     
@@ -140,6 +146,10 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
             make.centerX.centerY.equalToSuperview()
         }
         
+        self.view.snp.makeConstraints({ make in
+            make.height.equalTo(self.defaultHeight)
+        })
+        
         self.view.backgroundColor = self.color
     }
     
@@ -154,13 +164,12 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
         self.dismiss(animated: true, completion: nil)
     }
     
-    func height() -> CGFloat {
-        if displayWidget {
-            return self.defaultHeight
-        }
-        return 0
+    func recreateConstraints() {
+        self.view.snp.remakeConstraints({ make in
+            make.height.equalTo(self.defaultHeight)
+        })
     }
-    
+
     func update() {
         self.adapter.update(self)
     }
@@ -169,7 +178,8 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
     
     func didFinishUpdating() {
         self.displayWidget = !self.displayWidget
-        self.defaultHeight = self.defaultHeight * CGFloat(arc4random_uniform(UInt32(self.dashboardController!.widgets.count)) + 1)
+        self.defaultHeight = CGFloat(arc4random_uniform(50))*20
+        
         self.dashboardController?.reload(self)
     }
     
