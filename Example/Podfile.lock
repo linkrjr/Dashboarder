@@ -1,20 +1,20 @@
 PODS:
-  - Dashboarder (0.2.0):
-    - SnapKit (~> 4.0)
-  - SnapKit (4.0.0)
+  - Dashboarder (1.0.0):
+    - SnapKit (~> 3.2)
+  - SnapKit (3.2.0)
 
 DEPENDENCIES:
   - Dashboarder (from `../`)
-  - SnapKit
+  - SnapKit (= 3.2)
 
 EXTERNAL SOURCES:
   Dashboarder:
     :path: ../
 
 SPEC CHECKSUMS:
-  Dashboarder: 4b10d89af0b4bc5bf71b7ff8a4bee8dca678e7be
-  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+  Dashboarder: bfcaa0ee86bb96b10bb35bec57975bbe772b0b04
+  SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
 
-PODFILE CHECKSUM: 2119b87e431e1a021050165a9048d556b6007bc1
+PODFILE CHECKSUM: 438d1ea23b31e55efe27587674432ee611349908
 
 COCOAPODS: 1.3.1
