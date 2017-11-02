@@ -9,30 +9,6 @@
 
 import UIKit
 
-extension Array where Element == Bool {
-    
-    func all(are expected: Bool) -> Bool {
-        return self.all { $0 == expected }
-    }
-    
-    func any(is expected: Bool) -> Bool {
-        return self.any { $0 == expected }
-    }
-    
-}
-
-extension Array {
-    
-    func all(passes condition: (Element) -> Bool) -> Bool {
-        return self.filter { condition($0) }.count == self.count
-    }
-    
-    func any(pass condition: (Element) -> Bool) -> Bool {
-        return self.filter { condition($0) }.count > 0
-    }
-    
-}
-
 open class DashboardController: UIViewController {
     
     fileprivate var includedWidgets: [UIViewController : DashboardWidgetStatus] = [:]
