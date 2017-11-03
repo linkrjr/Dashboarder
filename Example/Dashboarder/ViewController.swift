@@ -12,37 +12,23 @@ import SnapKit
 
 class ViewController: DashboardController, UIScrollViewDelegate {
     
-    var widgetss: [DashboardWidget] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: false)]
-//        ,
-//                                       Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
-//                                       Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20),
-//                                       AppCardsWidget(color: .yellow, height: CGFloat(arc4random_uniform(50))*20)]
+    var widgetss: [DashboardWidget] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: true),
+                                       Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
+                                       Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20, display: true)]
+//                                        , AppCardsWidget(color: .yellow, height: CGFloat(arc4random_uniform(50))*20, display: false)]
     
     let backgroundView = UIView(frame: CGRect.zero)
     let bottomView = UIView(frame: CGRect.zero)
     
     override func viewDidLoad() {
-//        self.scrollView.delegate = self
-        
-//        self.backgroundView.frame = CGRect(origin: self.scrollView.frame.origin, size: self.scrollView.contentSize)
-//        self.backgroundView.backgroundColor = .red
-//        self.scrollView.addSubview(self.backgroundView)
-        
         self.widgetss.forEach { self.widgets.append($0) }
         
         super.viewDidLoad()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        dump(self.scrollView.contentSize)
-        
-    }
-    
     @IBAction func didTapShowButton(_ sender: Any) {
-        (0..<self.widgetss.count-1).forEach { i in
-            (self.widgetss[i] as! Widget).display = true
+        self.widgetss.forEach { widget in
+            (widget as! Widget).display = !(widget as! Widget).display
         }
     }
     
@@ -103,7 +89,7 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
     }
     
     func shouldInclude() -> Bool {
-        return true
+        return self.display
     }
     
     func recreateConstraints() {
@@ -123,6 +109,7 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
     
     private var defaultHeight: CGFloat!
     private var color: UIColor!
+    var display: Bool!
     
     var adapter: Adapter!
     
@@ -130,10 +117,11 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
         self.adapter = Adapter(viewPort: self)
     }
     
-    required init(color: UIColor = .clear, height: CGFloat = 0) {
+    required init(color: UIColor = .clear, height: CGFloat = 0, display: Bool = true) {
         super.init(nibName: nil, bundle: nil)
         self.color = color
         self.defaultHeight = height
+        self.display = display
         self.setup()
     }
     
@@ -183,13 +171,10 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
     }
     
     func shouldInclude() -> Bool {
-        return false
+        return self.display
     }
     
-    var displayWidget = true
-    
     func didFinishUpdating() {
-        self.displayWidget = !self.displayWidget
         self.defaultHeight = CGFloat(arc4random_uniform(50))*20
         
         self.dashboardController?.reload(self)

@@ -12,16 +12,21 @@ import SnapKit
 
 open class DashboardController: UIViewController {
     
-    fileprivate var includedWidgets: [UIViewController : DashboardWidgetStatus] = [:]
-    
     public var enablePullToRefresh: Bool = true
     public var lastRowTakesRemainingHeight: Bool = false
     
-    public var scrollView: UIScrollView = UIScrollView(frame: CGRect.zero)
+    public var scrollView: UIScrollView = {
+        $0.alwaysBounceVertical = true
+        $0.showsHorizontalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = false
+        return $0
+    }(UIScrollView(frame: CGRect.zero))
     
     public var widgets: [DashboardWidget] = []
     
     public var refreshControl:UIRefreshControl = UIRefreshControl()
+    
+    var dispatchGroup: DispatchGroup = DispatchGroup()
     
     open override func loadView() {
         super.loadView()
@@ -29,16 +34,10 @@ open class DashboardController: UIViewController {
         self.view = UIView(frame: CGRect.zero)
         self.view.backgroundColor = .white
         self.scrollView.backgroundColor = .clear
-        self.scrollView.alwaysBounceVertical = true
-        self.scrollView.showsHorizontalScrollIndicator = false
-        self.scrollView.showsVerticalScrollIndicator = false
 
         self.scrollView.sizeToFit()
-        self.view.addSubview(self.scrollView)
         
-        self.scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        self.view.addSubview(self.scrollView)
         
         self.view.contentMode = .redraw
     }
@@ -57,11 +56,11 @@ open class DashboardController: UIViewController {
     }
     
     fileprivate func generateChildrenConstraints() {
-        let childViewControllers: [UIViewController] = self.widgets.map { widget -> UIViewController in
-            return widget as! UIViewController
+        self.scrollView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
         }
-        
-        childViewControllers.enumerated().forEach { (index, childVC) in
+
+        self.childViewControllers.enumerated().makeIterator().forEach { (index, childVC) in
             
             childVC.view.snp.makeConstraints({ make in
                 
@@ -70,16 +69,17 @@ open class DashboardController: UIViewController {
                 switch index {
                 case 0:
                     make.top.equalToSuperview()
-                    
-                    if childViewControllers.count == 1 {
+                    if self.childViewControllers.count == 1 {
                         make.bottom.equalToSuperview()
                     }
                     
                 case childViewControllers.count - 1:
-                    make.top.equalTo(childViewControllers[index - 1].view.snp.bottom)
+                    make.top.equalTo(self.childViewControllers[index - 1].view.snp.bottom)
                     make.bottom.equalToSuperview()
+                    
                 default:
-                    make.top.equalTo(childViewControllers[index - 1].view.snp.bottom)
+                    make.top.equalTo(self.childViewControllers[index - 1].view.snp.bottom)
+                    
                 }
                 
             })
@@ -89,44 +89,42 @@ open class DashboardController: UIViewController {
     }
     
     @objc open func pullToRefresh(sender: UIRefreshControl) {
-        self.widgets.forEach { widget in
-            if let vc = widget as? UIViewController {
-                self.includedWidgets[vc] = .updating
-                widget.update()
-            }
-        }
-    }
-    
-    public func reload(_ widget: DashboardWidget) {
-        if let vc = widget as? UIViewController {
-            self.includedWidgets[vc] = .ready
+        self.childViewControllers.map({ childVC -> DashboardWidget in
+            return childVC as! DashboardWidget
+        }) .forEach { widget in
+            dispatchGroup.enter()
+            widget.update()
         }
         
-        if !self.includedWidgets.values.makeIterator().contains(.updating) {
-            
+        dispatchGroup.notify(queue: DispatchQueue.main) {
             if self.enablePullToRefresh && self.refreshControl.isRefreshing {
                 self.refreshControl.endRefreshing()
             }
+
+            self.removeWidgetsFromContainer()
+            self.addWidgetsToContainer()
 
             self.widgets.forEach({ widget in
                 widget.recreateConstraints()
             })
 
-            self.removeWidgetsFromContainer()
-            self.addWidgetsToContainer()
             self.generateChildrenConstraints()
             
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
-            
         }
+
+    }
+    
+    public func reload(_ widget: DashboardWidget) {
+        dispatchGroup.leave()
     }
     
     fileprivate func removeWidgetsFromContainer() {
         self.widgets.forEach { widget in
             guard let vc = widget as? UIViewController else { return }
-            self.includedWidgets[vc] = .ready
             vc.view.removeFromSuperview()
+            vc.removeFromParentViewController()
         }
     }
     
@@ -135,7 +133,6 @@ open class DashboardController: UIViewController {
             guard let vc = widget as? UIViewController else { return }
             
             if widget.shouldInclude() {
-                self.includedWidgets[vc] = .ready
                 self.addChildViewController(vc)
                 self.scrollView.addSubview(vc.view)
                 vc.didMove(toParentViewController: self)

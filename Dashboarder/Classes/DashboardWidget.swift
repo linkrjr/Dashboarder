@@ -7,11 +7,6 @@
 
 import Foundation
 
-enum DashboardWidgetStatus {
-    case ready
-    case updating
-}
-
 public protocol DashboardWidget {
     func update()
     func recreateConstraints()
