@@ -15,6 +15,7 @@ enum DashboardWidgetStatus {
 public protocol DashboardWidget {
     func update()
     func recreateConstraints()
+    func shouldInclude() -> Bool
 }
 
 public extension DashboardWidget where Self: UIViewController {

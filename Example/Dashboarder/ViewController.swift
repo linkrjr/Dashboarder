@@ -12,16 +12,17 @@ import SnapKit
 
 class ViewController: DashboardController, UIScrollViewDelegate {
     
-    var widgetss: [DashboardWidget] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: false),
-                                       Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
-                                       Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20),
-                                       AppCardsWidget(color: .yellow, height: CGFloat(arc4random_uniform(50))*20)]
+    var widgetss: [DashboardWidget] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: false)]
+//        ,
+//                                       Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
+//                                       Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20),
+//                                       AppCardsWidget(color: .yellow, height: CGFloat(arc4random_uniform(50))*20)]
     
     let backgroundView = UIView(frame: CGRect.zero)
     let bottomView = UIView(frame: CGRect.zero)
     
     override func viewDidLoad() {
-        self.scrollView.delegate = self
+//        self.scrollView.delegate = self
         
 //        self.backgroundView.frame = CGRect(origin: self.scrollView.frame.origin, size: self.scrollView.contentSize)
 //        self.backgroundView.backgroundColor = .red
@@ -30,6 +31,13 @@ class ViewController: DashboardController, UIScrollViewDelegate {
         self.widgetss.forEach { self.widgets.append($0) }
         
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        dump(self.scrollView.contentSize)
+        
     }
     
     @IBAction func didTapShowButton(_ sender: Any) {
@@ -79,12 +87,8 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
         self.view.addSubview(button)
         
         button.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+            make.edges.equalToSuperview().inset(10)
         }
-        
-        self.view.snp.makeConstraints({ make in
-            make.height.equalTo(self.defaultHeight)
-        })
         
         self.view.backgroundColor = self.color
     }
@@ -96,6 +100,10 @@ class Widget: UIViewController, DashboardWidget, ViewPort {
     
     func update() {
         self.adapter.update(self)
+    }
+    
+    func shouldInclude() -> Bool {
+        return true
     }
     
     func recreateConstraints() {
@@ -172,6 +180,10 @@ class AppCardsWidget: UIViewController, DashboardWidget, ViewPort {
 
     func update() {
         self.adapter.update(self)
+    }
+    
+    func shouldInclude() -> Bool {
+        return false
     }
     
     var displayWidget = true

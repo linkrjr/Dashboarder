@@ -28,7 +28,6 @@ open class DashboardController: UIViewController {
         
         self.view = UIView(frame: CGRect.zero)
         self.view.backgroundColor = .white
-        self.scrollView = UIScrollView(frame: CGRect.zero)
         self.scrollView.backgroundColor = .clear
         self.scrollView.alwaysBounceVertical = true
         self.scrollView.showsHorizontalScrollIndicator = false
@@ -66,15 +65,19 @@ open class DashboardController: UIViewController {
             
             childVC.view.snp.makeConstraints({ make in
                 
-                make.left.equalTo(0)
-                make.width.equalToSuperview()
+                make.left.width.equalToSuperview()
                 
                 switch index {
                 case 0:
-                    make.top.equalTo(0)
+                    make.top.equalToSuperview()
+                    
+                    if childViewControllers.count == 1 {
+                        make.bottom.equalToSuperview()
+                    }
+                    
                 case childViewControllers.count - 1:
                     make.top.equalTo(childViewControllers[index - 1].view.snp.bottom)
-                    make.bottom.equalTo(0)
+                    make.bottom.equalToSuperview()
                 default:
                     make.top.equalTo(childViewControllers[index - 1].view.snp.bottom)
                 }
@@ -130,10 +133,14 @@ open class DashboardController: UIViewController {
     fileprivate func addWidgetsToContainer() {
         self.widgets.forEach { widget in
             guard let vc = widget as? UIViewController else { return }
-            self.includedWidgets[vc] = .ready
-            self.addChildViewController(vc)
-            self.scrollView.addSubview(vc.view)
-            vc.didMove(toParentViewController: self)
+            
+            if widget.shouldInclude() {
+                self.includedWidgets[vc] = .ready
+                self.addChildViewController(vc)
+                self.scrollView.addSubview(vc.view)
+                vc.didMove(toParentViewController: self)
+            }
+            
         }
     }
 }
