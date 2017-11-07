@@ -101,17 +101,7 @@ open class DashboardController: UIViewController {
                 self.refreshControl.endRefreshing()
             }
 
-            self.removeWidgetsFromContainer()
-            self.addWidgetsToContainer()
-
-            self.widgets.forEach({ widget in
-                widget.recreateConstraints()
-            })
-
-            self.generateChildrenConstraints()
-            
-            self.view.setNeedsLayout()
-            self.view.layoutIfNeeded()
+            self.structureWidgets()
         }
 
     }
@@ -121,7 +111,17 @@ open class DashboardController: UIViewController {
     }
     
     public func structureWidgets() {
+        self.removeWidgetsFromContainer()
+        self.addWidgetsToContainer()
         
+        self.widgets.forEach({ widget in
+            widget.recreateConstraints()
+        })
+        
+        self.generateChildrenConstraints()
+        
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
     }
     
     fileprivate func removeWidgetsFromContainer() {
