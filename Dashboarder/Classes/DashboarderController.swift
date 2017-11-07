@@ -120,6 +120,10 @@ open class DashboardController: UIViewController {
         dispatchGroup.leave()
     }
     
+    public func structureWidgets() {
+        
+    }
+    
     fileprivate func removeWidgetsFromContainer() {
         self.widgets.forEach { widget in
             guard let vc = widget as? UIViewController else { return }
@@ -140,4 +144,6 @@ open class DashboardController: UIViewController {
             
         }
     }
+    
+    
 }
