@@ -101,7 +101,7 @@ open class DashboardController: UIViewController {
                 self.refreshControl.endRefreshing()
             }
 
-            self.structureWidgets()
+            self.setupWidgetsAndConstraints()
         }
 
     }
@@ -110,7 +110,7 @@ open class DashboardController: UIViewController {
         dispatchGroup.leave()
     }
     
-    public func structureWidgets() {
+    public func setupWidgetsAndConstraints() {
         self.removeWidgetsFromContainer()
         self.addWidgetsToContainer()
         
