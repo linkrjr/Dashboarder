@@ -25,7 +25,7 @@ open class DashboardController: UIViewController {
     }(UIScrollView(frame: CGRect.zero))
     
     public var widgets: [DashboardWidgetUIViewController] = []
-    private var addWidgets: [DashboardWidgetUIViewController] = []
+    public var addWidgets: [DashboardWidgetUIViewController] = []
     
     public var refreshControl:UIRefreshControl = UIRefreshControl()
     
