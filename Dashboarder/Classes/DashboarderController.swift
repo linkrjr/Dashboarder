@@ -10,6 +10,8 @@
 import UIKit
 import SnapKit
 
+public typealias DashboardWidgetUIViewController = DashboardWidget & UIViewController
+
 open class DashboardController: UIViewController {
     
     public var enablePullToRefresh: Bool = true
@@ -22,7 +24,8 @@ open class DashboardController: UIViewController {
         return $0
     }(UIScrollView(frame: CGRect.zero))
     
-    public var widgets: [DashboardWidget] = []
+    public var widgets: [DashboardWidgetUIViewController] = []
+    private var addWidgets: [DashboardWidgetUIViewController] = []
     
     public var refreshControl:UIRefreshControl = UIRefreshControl()
     
@@ -89,9 +92,7 @@ open class DashboardController: UIViewController {
     }
     
     @objc open func pullToRefresh(sender: UIRefreshControl) {
-        self.childViewControllers.map({ childVC -> DashboardWidget in
-            return childVC as! DashboardWidget
-        }) .forEach { widget in
+        self.addWidgets.forEach { widget in
             dispatchGroup.enter()
             widget.update()
         }
@@ -126,24 +127,21 @@ open class DashboardController: UIViewController {
     
     fileprivate func removeWidgetsFromContainer() {
         self.widgets.forEach { widget in
-            guard let vc = widget as? UIViewController else { return }
-            vc.view.removeFromSuperview()
-            vc.removeFromParentViewController()
+            widget.view.removeFromSuperview()
+            widget.removeFromParentViewController()
         }
+        self.addWidgets = []
     }
     
     fileprivate func addWidgetsToContainer() {
         self.widgets.forEach { widget in
-            guard let vc = widget as? UIViewController else { return }
-            
             if widget.shouldInclude() {
-                self.addChildViewController(vc)
-                self.scrollView.addSubview(vc.view)
-                vc.didMove(toParentViewController: self)
+                self.addWidgets.append(widget)
+                self.addChildViewController(widget)
+                self.scrollView.addSubview(widget.view)
+                widget.didMove(toParentViewController: self)
             }
-            
         }
     }
-    
     
 }

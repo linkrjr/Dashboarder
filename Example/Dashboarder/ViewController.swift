@@ -12,9 +12,9 @@ import SnapKit
 
 class ViewController: DashboardController, UIScrollViewDelegate {
     
-    var widgetss: [DashboardWidget] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: true),
-                                       Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
-                                       Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20, display: true)]
+    var widgetss: [DashboardWidget & UIViewController] = [Widget(color: .red, height: CGFloat(arc4random_uniform(50))*20, display: true),
+                                                           Widget(color: .orange, height: CGFloat(arc4random_uniform(50))*20, display: false),
+                                                           Widget(color: .blue,height: CGFloat(arc4random_uniform(50))*20, display: true)]
 //                                        , AppCardsWidget(color: .yellow, height: CGFloat(arc4random_uniform(50))*20, display: false)]
     
     let backgroundView = UIView(frame: CGRect.zero)
